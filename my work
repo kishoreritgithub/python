@@ -1,0 +1,49 @@
+a=int(input("Enter the value :"))
+b=int(input("Enter the value :"))
+c=a+b
+print("Add",c)
+print("\n")
+
+c=a-b
+print("Sub",c)
+print("\n")
+
+c=a*b
+print("Multi",c)
+print("\n")
+
+c=a/b
+print("Div",c)
+print("\n")
+
+c=a%b
+print("Modulo division",c)
+print("\n")
+
+c=a**b
+print("Exponentiation:",c)
+print("\n")
+
+c=a//b
+print("Floor Division:",c)
+
+------------------------------------
+
+#Reverse integer
+
+num = 'kishore'
+print(str(num)[::-1])
+
+-------------------------------------
+
+#string to number
+
+string = '1500.34'
+floa= float(string)
+inte= int(floa)
+print(type(inte))
+print(inte)
+print(floa)
+
+---------------------------------------
+
