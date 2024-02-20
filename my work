@@ -1,49 +1,116 @@
-a=int(input("Enter the value :"))
-b=int(input("Enter the value :"))
-c=a+b
-print("Add",c)
-print("\n")
+from tkinter import *
+from tkinter import messagebox
+from PIL import Image, ImageTk
+import tkinter as tk
+import datetime
+import mysql.connector
+from tkinter import ttk
+tk=Tk()
+tk.geometry("1100x800")
+tk.title("Park__IT")
+tk.resizable(False,False)
+tk.config(bg='#06283d')
 
-c=a-b
-print("Sub",c)
-print("\n")
+image = Image.open("C:\\Users\\kisho\\Desktop\\c\\c\\1.png")
+resize1 = image.resize((1100,800))
+img = ImageTk.PhotoImage(resize1)
 
-c=a*b
-print("Multi",c)
-print("\n")
 
-c=a/b
-print("Div",c)
-print("\n")
+x = datetime.datetime.now()
+x1 = x.strftime("%d/%m/%Y/%H:%M")
+print(x.strftime("%d/%m/%Y/%H:%M"))
 
-c=a%b
-print("Modulo division",c)
-print("\n")
+def clear():
+    number_entry.delete(0,END)
 
-c=a**b
-print("Exponentiation:",c)
-print("\n")
+def on_entre(event):
+    if number_entry.get()=='Entre the Vehicle number':
+        number_entry.delete(0,END)
 
-c=a//b
-print("Floor Division:",c)
 
-------------------------------------
+def Enter ():
+    if number_entry.get()=='':
+        messagebox.showerror("Error","Plese Enter the vehicle number")
 
-#Reverse integer
+    else:
+        try:
+            con = mysql.connector.connect(host="localhost",user="root",passwd="",database='park_it')
+            mycursor=con.cursor()
+            print('connected successfully')
+        except:
+            messagebox.showerror('Error','Database connectivity Issue, please try again')
 
-num = 'kishore'
-print(str(num)[::-1])
+        sql='insert into entry(vehicle_number,time) values (%s,%s)'
+        data=(number_entry.get(),x1)
+        mycursor.execute(sql,data)
+        con.commit()
+        messagebox.showinfo('success','Rigistration Successfully')
+        clear()
 
--------------------------------------
 
-#string to number
 
-string = '1500.34'
-floa= float(string)
-inte= int(floa)
-print(type(inte))
-print(inte)
-print(floa)
 
----------------------------------------
+def Exit():
+    if number_entry.get()=='':
+        messagebox.showerror("Error", "Plese Enter the vehicle number")
+    else:
+        new = Toplevel(tk)
+        new.geometry("500x300+470+280")
+        new.config(bg="white")
+        new.resizable(False,False)
+        new.title("Exit")
+        labnew = Label(new, text=x1, font=("times", 15, "bold"), fg="black", bg="white")
+        labnew.place(x=100,y=100)
+        entry_time =Label(new,text=('In Time',x1),bg='white',fg='black' )
+        entry_time.place(x=100,y=140)
+        exit_time=Label(new,text=('Out Time',x1),bg='white',fg='black',font=('times',14,'bold'))
+        exit_time.place(x=100,y=160)
 
+    try:
+        con = mysql.connector.connect(host="localhost", user="root", passwd="", database='park_it')
+        mycursor = con.cursor()
+        print('connected successfully')
+    except:
+        messagebox.showerror('Error', 'Database connectivity Issue, please try again')
+
+    """sql = 'insert into entry(vehicle_number,time) values (%s,%s)'
+    data = (number_entry.get(), x1)"""
+    
+    sql = 'use park_it '
+    mycursor.execute(sql)
+    sql='insert into entry(vehicle_number,time) values (%s,%s)'
+    sql='select * from entry where vehicle_number=%s'
+    mycursor.execute(sql,(number_entry.get()))
+    row=mycursor.fetchone()
+    if row=='none':
+        messagebox.showerror('Error',"number ah olunga podu da venna")
+    else:
+        messagebox.showinfo('success','Super da thambi') 
+
+    clear()
+   
+
+
+
+lab = Label(tk,text=" Park It ",font=("times",40,"italic"),fg="white",bg='#2c5e50')
+lab.pack(fill=X)
+label1 = Label(image=img)
+label1.image = img
+label1.pack()
+"""number=Label(tk,text="Enter the vehicle number",font=("time",20),bg='white',fg='black')
+number.place(x=730,y=350)"""
+number_entry=Entry(tk,width='23',font=("times " ,18,'bold'),bd=0,bg='#EDEDED',fg="black")
+number_entry.place(x=740,y=410)
+number_entry.insert(0,"Entre the Vehicle number")
+""" <FocusIn> this command is used to track the cursors location and call the"""
+number_entry.bind('<FocusIn>',on_entre)
+
+frame2=Frame(tk, width=302,height=2,bg="black")
+frame2.place(x=740,y=445)
+
+sub=Button(tk,text="Enter",bg="#137fae",fg="white",font=("times",20,"bold"),activebackground="#009432",activeforeground="yellow",command=Enter)
+sub.place(x=750,y=480)
+sub=Button(tk,text="Exit",bg="red",fg="white",font=("times",20,"bold"),activebackground="#ff3838",activeforeground="yellow",command=Exit)
+sub.place(x=950,y=480)
+
+tk.mainloop()
